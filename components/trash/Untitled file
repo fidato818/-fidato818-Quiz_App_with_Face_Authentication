@@ -1,0 +1,121 @@
+         {displayName ? (
+           <Text style={styles.paragraph}>
+             Current User: {displayName}
+             {'\n'} Async User: {asyncDataUser}
+           </Text>
+         ) : (
+           <Text style={styles.paragraph}>
+             Current User: 'username is not defined', {'\n'}
+             Async User: 'username is not defined',
+           </Text>
+         )}
+         <Button mode="contained" onPress={() => this.handleLogout()}>
+           LOGOUT
+         </Button>
+         <Text />
+        {!this.state.user && (
+           <Portal>
+             <FAB.Group
+               open={this.state.open}
+               icon={this.state.open ? 'add' : 'add'}
+               actions={[
+                 {
+                   icon: 'add',
+                   label: 'Login',
+                   onPress: () => {
+                     this._showDialog();
+                   },
+                 },
+                 {
+                   icon: 'add',
+                   label: 'Login with Google',
+                   onPress: () => {
+                     this.signInAsync();
+                   },
+                 },
+                 {
+                   icon: 'add',
+                   label: 'Login with Facebook',
+                   onPress: () => {
+                     this.loginWithFacebook();
+                   },
+                 },
+               ]}
+               onStateChange={({ open }) => this.setState({ open })}
+               onPress={() => {
+                 if (this.state.open) {
+                   // do something if the speed dial is open
+                 }
+               }}
+             />
+           </Portal>
+         )}
+         <Portal>
+           <Dialog visible={visibleDialog} onDismiss={this._hideDialog}>
+             {toggle ? (
+               <Dialog.ScrollArea>
+                 <Dialog.Title>Sign in - Quiz App</Dialog.Title>
+                 <ScrollView contentContainerStyle={{ paddingHorizontal: 24 }}>
+                   <TextInput
+                     mode="outlined"
+                     label="Email"
+                     value={email}
+                     onChangeText={email => this.setState({ email })}
+                   />
+                   <TextInput
+                     mode="outlined"
+                     label="Password"
+                     value={password}
+                     onChangeText={password => this.setState({ password })}
+                   />
+                 </ScrollView>
+                 <Dialog.Actions style={{ justifyContent: 'space-between' }}>
+                   <Button onPress={() => this.loginUser()}>Login</Button>
+                   <Button
+                     onPress={() =>
+                       this.setState({
+                         toggle: false,
+                       })
+                     }>
+                     Create Account
+                   </Button>
+                 </Dialog.Actions>
+               </Dialog.ScrollArea>
+             ) : (
+               <Dialog.ScrollArea>
+                 <Dialog.Title>Signup - Quiz App</Dialog.Title>
+                 <ScrollView contentContainerStyle={{ paddingHorizontal: 24 }}>
+                   <TextInput
+                     mode="outlined"
+                     label="Name"
+                     value={name}
+                     onChangeText={name => this.setState({ name })}
+                   />
+                   <TextInput
+                     mode="outlined"
+                     label="Email"
+                     value={email}
+                     onChangeText={email => this.setState({ email })}
+                   />
+                   <TextInput
+                     mode="outlined"
+                     label="Password"
+                     value={password}
+                     onChangeText={password => this.setState({ password })}
+                   />
+                 </ScrollView>
+                 <Dialog.Actions>
+                   <Button onPress={() => this.signUpUser()}>Signup</Button>
+                   <Button
+                     onPress={() =>
+                       this.setState({
+                         toggle: true,
+                       })
+                     }>
+                     Sign in
+                   </Button>
+                 </Dialog.Actions>
+               </Dialog.ScrollArea>
+             )}
+           </Dialog>
+         </Portal>

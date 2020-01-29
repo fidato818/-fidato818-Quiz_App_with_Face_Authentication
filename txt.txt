@@ -1,0 +1,108 @@
+import * as React from 'react';
+import { Text, View, StyleSheet, Image } from 'react-native';
+import Constants from 'expo-constants';
+import * as Permissions from 'expo-permissions';
+import * as ImagePicker from 'expo-image-picker';
+import {
+  Appbar,
+  Provider as PaperProvider,
+  Avatar,
+  Button,
+  Card,
+  Title,
+  Paragraph,
+} from 'react-native-paper';
+
+export default class Cambar extends React.Component {
+  state = {
+    image: null,
+  };
+  // _goBack = () => console.log('Went back');
+
+  // _onSearch = () => console.log('Searching');
+
+  // _onMore = () => console.log('Shown more');
+
+  componentDidMount() {
+    this.getPermissionAsync();
+  }
+
+  getPermissionAsync = async () => {
+    if (Constants.platform.ios) {
+      const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+      if (status !== 'granted') {
+        alert('Sorry, we need camera roll permissions to make this work!');
+      }
+    }
+  };
+
+  _pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+    });
+
+    console.log(result);
+
+    if (!result.cancelled) {
+      this.setState({ image: result.uri });
+    }
+  };
+
+  render() {
+    const { image } = this.state;
+    return (
+      <PaperProvider>
+        <Appbar.Header>
+          <Appbar.Action
+            icon={{
+              uri: 'https://img.icons8.com/android/24/000000/menu.png',
+            }}
+            onPress={this._goBack}
+          />
+          <Appbar.Content title="EMR Docs" />
+        </Appbar.Header>
+        <Card style={styles.container}>
+          {image && (
+            <Image
+              source={{ uri: image }}
+              style={{ width: 200, height: 200 }}
+            />
+          )}
+          <Button mode="outline" onPress={this._pickImage}>
+            Pick an image from camera roll
+          </Button>
+
+          <Text />
+          {image && (
+            <Button
+              mode="contained"
+              onPress={() => this.props.navigation.navigate('Qrpage')}>
+              Next
+            </Button>
+          )}
+        </Card>
+      </PaperProvider>
+    );
+  }
+}
+const styles = StyleSheet.create({
+  container: {
+    marginTop: 180,
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 24,
+  },
+  // paragraph: {
+  //   margin: 24,
+  //   marginTop: 0,
+  //   fontSize: 14,
+  //   fontWeight: 'bold',
+  //   textAlign: 'center',
+  // },
+  // logo: {
+  //   height: 200,
+  //   width: 200,
+  // },
+});

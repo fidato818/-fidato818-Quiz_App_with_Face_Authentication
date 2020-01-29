@@ -1,0 +1,165 @@
+const MainNavigator = createStackNavigator({
+  Auth: {
+    screen: MainPageScreen,
+    navigationOptions: {
+      header: null,
+    },
+  },
+  Home: {
+    screen: CambarScreen,
+    navigationOptions: {
+      header: null,
+    },
+  },
+  Qrpage: {
+    screen: QrPageScreen, 
+    navigationOptions: {
+      header: null, 
+    },
+  },
+});
+
+export default createAppContainer(MainNavigator);
+
+
+
+
+
+
+        // headerTitle: <MyComponent />,
+        // headerLeft: (
+        //   <Button
+        //     title="Info"
+        //     name="caretup"
+        //     size={30}
+        //     color="#900"
+        //     style={{ paddingLeft: 5 }}
+        //     onPress={() => navigation.openDrawer()}
+        //     // size={32}
+        //   />
+        // ),
+
+
+
+
+
+
+
+
+
+
+
+class App extends Component {
+  render() {
+    return <AppContainer />;
+  }
+}
+export default App;
+
+class WelcomeScreen extends Component {
+  render() {
+    return (
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <Button
+          title="Login"
+          onPress={() => this.props.navigation.navigate('Dashboard')}
+        />
+        <Button title="Sign Up" onPress={() => alert('button pressed')} />
+      </View>
+    );
+  }
+}
+
+class DashboardScreen extends Component {
+  render() {
+    return (
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <Text>DashboardScreen</Text>
+      </View>
+    );
+  }
+}
+
+class Feed extends Component {
+  render() {
+    return (
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <Text>Feed</Text>
+      </View>
+    );
+  }
+}
+
+class Settings extends Component {
+  render() {
+    return (
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <Text>Settings</Text>
+      </View>
+    );
+  }
+}
+
+class Profile extends Component {
+  render() {
+    return (
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <Text>Profile</Text>
+      </View>
+    );
+  }
+}
+
+
+
+
+  //---------------------------------------------------------------------
+  //---------------------------------------------------------------------
+
+  // uploadImageAsync(pictureuri) {
+  //   let apiUrl = 'http://123.123.123.123/ABC';
+
+  //   var data = new FormData();
+  //   data.append('file', {
+  //     uri: pictureuri,
+  //     name: 'file',
+  //     type: 'image/jpg',
+  //   });
+
+  //   fetch(apiUrl, {
+  //     headers: {
+  //       Accept: 'application/json',
+  //       'Content-Type': 'multipart/form-data',
+  //     },
+  //     method: 'POST',
+  //     body: data,
+  //   })
+  //     .then(response => {
+  //       console.log('succ ', response);
+  //     })
+  //     .catch(err => {
+  //       console.log('err ', err);
+  //     });
+  // }
+
+  //---------------------------------------------------------------------
+
+        {
+          /*   if (res == null) {
+          this.setState({
+            showIndicator: true,
+          });
+        } else {
+          this.setState({
+            showIndicator: false,
+          });
+          Alert.alert('Success: ', res);
+          console.log('success', res);
+        } 
+        */
+        }
+
+  //---------------------------------------------------------------------
+  //---------------------------------------------------------------------
+
+
