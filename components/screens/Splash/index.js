@@ -1,26 +1,15 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, Image, ImageBackground } from 'react-native';
-import * as Font from 'expo-font';
-import { connect } from 'react-redux';
+
 
 export default class Splash extends Component {
   constructor(props) {
     super(props);
 
     setTimeout(() => {
-      // props.navigation.navigate('Dashboard');
-      props.navigation.navigate('Quiz');
-      // props.navigation.navigate('ScanAgain');
-      }, 3000);
-    // }, 500);
-    // }
-
-    // componentDidMount() {
-    //   Font.loadAsync({
-    //     'ubuntu-regular': require('../../assets/fonts/Ubuntu-R.ttf'),
-    //   });
-    // }
-  } 
+      props.navigation.navigate('Dashboard');
+    }, 3000);
+  }
   render() {
     return (
       <ImageBackground
@@ -53,16 +42,6 @@ export default class Splash extends Component {
   }
 }
 
-// const mapStateToProps = state => {
-//   return {
-//     status: state.netStatus.connection,
-//   };
-// };
-
-// export default connect(
-//   mapStateToProps,
-//   null
-// )(Splash);
 const styles = StyleSheet.create({
   backgroundImage: {
     flex: 1,
@@ -70,10 +49,7 @@ const styles = StyleSheet.create({
     height: null,
     resizeMode: 'cover',
   },
-  // bottom: {
-  //   // justifyContent: 'flex-end',
-  //   marginBottom: 20,
-  // },
+
   bottomView: {
     width: '100%',
     height: 50,
@@ -85,7 +61,7 @@ const styles = StyleSheet.create({
   },
   textStyle: {
     fontFamily: 'ubuntu-regular',
-    fontSize: 16,
-    color: 'black',
+    fontSize: 20,
+    color: 'white',
   },
 });

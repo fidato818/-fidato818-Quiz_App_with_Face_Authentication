@@ -6,12 +6,12 @@ import {
   Image,
   StyleSheet,
   Alert,
+  Dimensions,
 } from 'react-native';
 import * as Permissions from 'expo-permissions';
 import { Camera } from 'expo-camera';
 import * as FaceDetector from 'expo-face-detector';
 import * as ImagePicker from 'expo-image-picker';
-
 import {
   Button,
   Modal,
@@ -24,28 +24,31 @@ import {
   Paragraph,
   Title,
   Snackbar,
+  Avatar,
+  ActivityIndicator,
 } from 'react-native-paper';
 import ProgressBar from 'react-native-progress/Bar';
-
+const win = Dimensions.get('window');
+const ratio = win.width / 541;
 export default class FaceScan extends React.Component {
-  state = {
-    hasCameraPermission: null,
-    visible: false,
-    image:
-      'https://cdn0.iconfinder.com/data/icons/business-management-and-growth-13/64/681-512.png',
-    // image:
-    //   'https://images.unsplash.com/photo-1526512340740-9217d0159da9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80',
-    uploading: false,
-
-    scanned: false,
-    open: false,
-    toggle: false,
-    shown: false,
-    visibleSnackbar: false,
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      hasCameraPermission: null,
+      visible: false,
+      iamge: null,
+      uploading: false,
+      scanned: false,
+      open: false,
+      toggle: false,
+      shown: false,
+      visibleSnackbar: false,
+      showIndicator: false,
+    };
+  }
 
   _maybeRenderImage = () => {
-    let { image, faceDummy } = this.state;
+    let { image } = this.state;
 
     if (!image) {
       return;
@@ -93,6 +96,7 @@ export default class FaceScan extends React.Component {
   };
 
   _takePhoto = async () => {
+    this.setState({ showIndicator: true });
     const { status: cameraPerm } = await Permissions.askAsync(
       Permissions.CAMERA
     );
@@ -111,8 +115,13 @@ export default class FaceScan extends React.Component {
       try {
         let detect = await this.detectFaces(pickerResult.uri);
         console.log('detect', detect.faces);
-        if (detect.faces.length) {
-          this.setState({ visibleSnackbar: true });
+        if (detect.faces.length && !pickerResult.cancelled) {
+          this.setState({
+            image: pickerResult.uri,
+            visibleSnackbar: true,
+            showIndicator: false,
+            // toggle: !this.state.toggle,
+          });
         } else if (detect.faces.length === 0) {
           Alert.alert(
             'Quiz App',
@@ -123,8 +132,6 @@ export default class FaceScan extends React.Component {
                 onPress: () =>
                   this.setState({
                     toggle: !this.state.toggle,
-                    image:
-                      'https://cdn0.iconfinder.com/data/icons/business-management-and-growth-13/64/681-512.png',
                   }),
               },
             ],
@@ -137,14 +144,19 @@ export default class FaceScan extends React.Component {
       } catch (e) {
         console.log(e);
       }
-
-      if (!pickerResult.cancelled) {
+      if (pickerResult.cancelled) {
         this.setState({
-          image: pickerResult.uri,
-
-          toggle: !this.state.toggle,
+          showIndicator: false,
         });
       }
+
+      // if (!pickerResult.cancelled) {
+      //   this.setState({
+      //     image: pickerResult.uri,
+
+      //     showIndicator: false,
+      //   }); 
+      // }
 
       this.uploadImageAsync(pickerResult.uri);
     }
@@ -166,80 +178,77 @@ export default class FaceScan extends React.Component {
       image,
       hasCameraPermission,
       scanned,
-      faceDummy,
-      detect,
       visibleSnackbar,
+      imagedummy,
     } = this.state;
-    console.log(detect);
+
+    console.log('image', image);
 
     if (hasCameraPermission === null) {
       return (
-        <Text
+        <View
           style={{
             flex: 1,
             justifyContent: 'center',
             alignItems: 'center',
           }}>
-          Requesting for camera permission
-        </Text>
+          <Text>Requesting for camera permission</Text>
+        </View>
       );
     }
     if (hasCameraPermission === false) {
       return (
-        <Text
+        <View
           style={{
             flex: 1,
             justifyContent: 'center',
             alignItems: 'center',
           }}>
-          No access to camera
-        </Text>
+          <Text> No access to camera</Text>
+        </View>
       );
     }
     return (
       <PaperProvider>
-        <View>
+        {this.state.showIndicator ? (
+          <View style={styles.loading}>
+            <ActivityIndicator size="large" color="#0000ff" />
+          </View>
+        ) : (
           <View>{this._maybeRenderImage()}</View>
-        </View>
+        )}
+
         <View style={styles.bottomView}>
-          {this.state.toggle && image ? (
+          {image ? (
             <View>
-              {detect ? (
-                <Button
-                  mode="contained"
-                  color="#3498db"
-                  disabled={false}
-                  onPress={() =>
-                    this.props.navigation.navigate('Quiz', {
-                      imageUri: image,
-                    })
-                  }>
-                  Start Quiz
-                </Button>
-              ) : (
-                <Button
-                  mode="contained"
-                  color="#3498db"
-                  disabled
-                  onPress={() =>
-                    this.props.navigation.navigate('Quiz', {
-                      imageUri: image,
-                    })
-                  }>
-                  Start Quiz
-                </Button>
-              )}
+              <Button
+                mode="contained"
+                color="#3498db"
+                disabled={false}
+                onPress={() =>
+                  this.props.navigation.navigate('Quiz', {
+                    imageUri: image,
+                  })
+                }>
+                <Text style={{ color: 'white' }}>Start Quiz</Text>
+              </Button>
             </View>
           ) : (
             <View>
-              {!this.state.toggle && image && (
-                <Button
-                  mode="contained"
-                  color="#3498db"
-                  onPress={() => this._takePhoto()}>
+              <Image
+                style={{ width: win.width }}
+                source={require('../../../681-512 1.png')}
+                resizeMode="contain"
+              />
+
+              <Button
+                mode="contained"
+                color="#3498db"
+                onPress={() => this._takePhoto()}>
+                <Text style={{ color: 'white' }}>
                   Take Snap then Start Quiz
-                </Button>
-              )}
+                </Text>
+              </Button>
             </View>
           )}
           <Snackbar
@@ -260,25 +269,6 @@ export default class FaceScan extends React.Component {
   }
 }
 const styles = StyleSheet.create({
-  // container: {
-  //   alignItems: 'center',
-  //   flex: 6,
-  //   justifyContent: 'center',
-  //  fontFamily: 'ubuntu-regular',
-  // },
-  // exampleText: {
-  //   flex: 1,
-  //   justifyContent: 'center',
-  //   fontSize: 20,
-  //   marginBottom: 20,
-  //   marginHorizontal: 15,
-  //   textAlign: 'center',
-  // },
-  // maybeRenderUploading: {
-  //   alignItems: 'center',
-  //   backgroundColor: 'rgba(0,0,0,0.4)',
-  //   justifyContent: 'center',
-  // },
   maybeRenderContainer: {
     // borderRadius: 3,
     elevation: 2,
@@ -299,24 +289,6 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 3,
     overflow: 'hidden',
   },
-  // maybeRenderImage: {
-  //   // marginTop: 10,
-  //   // marginLeft: 10,
-  //   height: 520,
-  //   width: width,
-  // },
-
-  // shadow: {
-  //   // Sweet! Android shadow!
-  //   elevation: 5,
-  // },
-  // backgroundImage: {
-  //   flex: 1,
-  //   width: null,
-  //   height: null,
-  //   resizeMode: 'cover',
-  //   fontFamily: 'ubuntu-regular',
-  // },
 
   bottomView: {
     width: '100%',
@@ -327,9 +299,13 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 0,
   },
-  // textStyle: {
-  //   fontFamily: 'ubuntu-regular',
-  //   fontSize: 16,
-  //   color: 'white',
-  // },
+  loading: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 });

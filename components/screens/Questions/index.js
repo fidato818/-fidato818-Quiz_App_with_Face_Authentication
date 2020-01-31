@@ -10,8 +10,9 @@ import {
   Title,
   Paragraph,
   Divider,
+  ActivityIndicator,
 } from 'react-native-paper';
-const timer = () => {};
+const timer = () => { };
 export default class Quest extends Component {
   constructor(props, context) {
     super(props, context);
@@ -23,6 +24,7 @@ export default class Quest extends Component {
       value: '',
       timer: 60 * 5 + 30,
       photo: this.props.navigation.state.params.imageUri,
+      showIndicator: false,
     };
   }
 
@@ -34,7 +36,7 @@ export default class Quest extends Component {
       .then(resp => {
         return this.setState({ questions: resp.results });
       });
-     this.countdownTimer();
+    this.countdownTimer();
   }
 
   countdownTimer() {
@@ -85,21 +87,14 @@ export default class Quest extends Component {
     const {
       questions,
       currentQuesIndex,
-      answers,
-      answerShow,
-      correct,
-      incorrect,
+
       value,
-      resultValue,
+
       answerCorrect,
-      rewardTitle,
+
       photo,
       remainingTime,
     } = this.state;
-    console.log('remainingTime', remainingTime);
-
-    // console.log(correct);
-    // console.log(incorrect);
 
     if (!questions.length) {
       return <View />;
@@ -148,23 +143,23 @@ export default class Quest extends Component {
                   You Are Failed!
                 </Text>
               ) : (
-                answerCorrect == 0 && (
-                  <Text
-                    style={{
-                      textAlign: 'center',
-                      fontSize: 20,
-                      marginBottom: 30,
-                      color: 'red',
-                    }}>
-                    You Are Failed!
+                      answerCorrect == 0 && (
+                        <Text
+                          style={{
+                            textAlign: 'center',
+                            fontSize: 20,
+                            marginBottom: 30,
+                            color: 'red',
+                          }}>
+                          You Are Failed!
                   </Text>
-                )
-              )}
+                      )
+                    )}
               <Button
                 mode="contained"
                 color="#3498db"
                 onPress={() => this.props.navigation.navigate('Dashboard')}>
-                Test Again
+                <Text style={{ color: 'white' }}>Test Again</Text>
               </Button>
             </Card.Content>
           </Card>
@@ -178,122 +173,130 @@ export default class Quest extends Component {
 
     return (
       <PaperProvider>
-        {photo ? (
-          <View style={styles.container}>
-            <Card style={{ justifyContent: 'flex-start' }}>
-              <Card.Content>
-                <CountDown
-                  until={60 * 5 + 30}
-                  size={30}
-                  onFinish={() => this.notAnswerAnyquestion()}
-                  digitStyle={{ backgroundColor: '#FFF' }}
-                  digitTxtStyle={{ color: '#1CC625' }}
-                  timeToShow={['M', 'S']}
-                  timeLabels={{ m: 'MM', s: 'SS' }}
-                />
+        {!this.state.questions.length === 0 ? (
+          <View>
+            {photo ? (
+              <View style={styles.container}>
+                <Card style={{ justifyContent: 'flex-start' }}>
+                  <Card.Content>
+                    <CountDown
+                      until={60 * 5 + 30}
+                      size={30}
+                      onFinish={() => this.notAnswerAnyquestion()}
+                      digitStyle={{ backgroundColor: '#FFF' }}
+                      digitTxtStyle={{ color: '#1CC625' }}
+                      timeToShow={['M', 'S']}
+                      timeLabels={{ m: 'MM', s: 'SS' }}
+                    />
 
-                <Title>{question}</Title>
-                <Divider />
-                <RadioButton.Group
-                  onValueChange={value => this.setState({ value })}
-                  value={this.state.value}>
-                  <View style={{ flexDirection: 'row' }}>
-                    <View>
-                      <RadioButton
-                        color="#3498db"
-                        value={incorrect_answers[0]}
-                      />
-                    </View>
-                    <View style={{ justifyContent: 'center' }}>
-                      <Text
-                        onPress={() =>
-                          this.setState({ value: incorrect_answers[0] })
-                        }>
-                        {incorrect_answers[0]}
-                      </Text>
-                    </View>
-                  </View>
-                  <View style={{ flexDirection: 'row' }}>
-                    <View>
-                      <RadioButton
-                        color="#3498db"
-                        value={incorrect_answers[1]}
-                      />
-                    </View>
-                    <View style={{ justifyContent: 'center' }}>
-                      <Text
-                        onPress={() =>
-                          this.setState({ value: incorrect_answers[1] })
-                        }>
-                        >{incorrect_answers[1]}
-                      </Text>
-                    </View>
-                  </View>
-                  <View style={{ flexDirection: 'row' }}>
-                    <View>
-                      <RadioButton
-                        color="#3498db"
-                        value={incorrect_answers[2]}
-                      />
-                    </View>
-                    <View style={{ justifyContent: 'center' }}>
-                      <Text
-                        onPress={() =>
-                          this.setState({ value: incorrect_answers[2] })
-                        }>
-                        {incorrect_answers[2]}
-                      </Text>
-                    </View>
-                  </View>
-                  <View style={{ flexDirection: 'row' }}>
-                    <View>
-                      <RadioButton color="#3498db" value={correct_answer} />
-                    </View>
-                    <View style={{ justifyContent: 'center' }}>
-                      <Text
-                        onPress={() =>
-                          this.setState({ value: correct_answer })
-                        }>
-                        {correct_answer}
-                      </Text>
-                    </View>
-                  </View>
-                </RadioButton.Group>
-              </Card.Content>
+                    <Title>{question}</Title>
+                    <Divider />
+                    <RadioButton.Group
+                      onValueChange={value => this.setState({ value })}
+                      value={this.state.value}>
+                      <View style={{ flexDirection: 'row' }}>
+                        <View>
+                          <RadioButton
+                            color="#3498db"
+                            value={incorrect_answers[0]}
+                          />
+                        </View>
+                        <View style={{ justifyContent: 'center' }}>
+                          <Text
+                            onPress={() =>
+                              this.setState({ value: incorrect_answers[0] })
+                            }>
+                            {incorrect_answers[0]}
+                          </Text>
+                        </View>
+                      </View>
+                      <View style={{ flexDirection: 'row' }}>
+                        <View>
+                          <RadioButton
+                            color="#3498db"
+                            value={incorrect_answers[1]}
+                          />
+                        </View>
+                        <View style={{ justifyContent: 'center' }}>
+                          <Text
+                            onPress={() =>
+                              this.setState({ value: incorrect_answers[1] })
+                            }>
+                            >{incorrect_answers[1]}
+                          </Text>
+                        </View>
+                      </View>
+                      <View style={{ flexDirection: 'row' }}>
+                        <View>
+                          <RadioButton
+                            color="#3498db"
+                            value={incorrect_answers[2]}
+                          />
+                        </View>
+                        <View style={{ justifyContent: 'center' }}>
+                          <Text
+                            onPress={() =>
+                              this.setState({ value: incorrect_answers[2] })
+                            }>
+                            {incorrect_answers[2]}
+                          </Text>
+                        </View>
+                      </View>
+                      <View style={{ flexDirection: 'row' }}>
+                        <View>
+                          <RadioButton color="#3498db" value={correct_answer} />
+                        </View>
+                        <View style={{ justifyContent: 'center' }}>
+                          <Text
+                            onPress={() =>
+                              this.setState({ value: correct_answer })
+                            }>
+                            {correct_answer}
+                          </Text>
+                        </View>
+                      </View>
+                    </RadioButton.Group>
+                  </Card.Content>
 
-              <Card.Actions style={{ justifyContent: 'center' }}>
-                {this.state.value ? (
+                  <Card.Actions style={{ justifyContent: 'center' }}>
+                    {this.state.value ? (
+                      <Button
+                        disabled={false}
+                        color="#3498db"
+                        onPress={() => this.handleNext(value)}>
+                        Next
+                      </Button>
+                    ) : (
+                        <Button
+                          disabled
+                          color="#3498db"
+                          onPress={() => this.handleNext(value)}>
+                          Next
+                      </Button>
+                      )}
+                  </Card.Actions>
+                </Card>
+              </View>
+            ) : (
+                <View style={styles.noaccess}>
+                  <Text style={{ fontSize: 20, color: 'red' }}>
+                    You didn't access any Quiz!
+                </Text>
                   <Button
+                    mode="contained"
                     disabled={false}
                     color="#3498db"
-                    onPress={() => this.handleNext(value)}>
-                    Next
+                    onPress={() => this.props.navigation.navigate('Scan Face')}>
+                    <Text style={{ color: 'white' }}>Back</Text>
                   </Button>
-                ) : (
-                  <Button
-                    disabled
-                    color="#3498db"
-                    onPress={() => this.handleNext(value)}>
-                    Next
-                  </Button>
-                )}
-              </Card.Actions>
-            </Card>
+                </View>
+              )}
           </View>
         ) : (
-          <View style={styles.noaccess}>
-            <Text style={{ fontSize: 20, color: 'red' }}>
-              You didn't access any Quiz!
-            </Text>
-            <Button
-              mode="contained"
-              disabled={false}
-              color="#3498db"
-              onPress={() => this.props.navigation.navigate('Scan Face')}>
-              Back
-            </Button>
-          </View>
-        )}
+            <View style={styles.loading}>
+              <ActivityIndicator size="large" color="#0000ff" />
+            </View>
+          )}
       </PaperProvider>
     );
   }
@@ -313,5 +316,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     // paddingTop: Constants.statusBarHeight,
     backgroundColor: '#ecf0f1',
+  },
+  loading: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

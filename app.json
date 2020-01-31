@@ -1,18 +1,28 @@
 {
   "expo": {
-    "name": "petrified-candy",
-    "description": "No description",
-    "slug": "snack-ea077993-ef73-4ff2-bf70-fb745939fe8a",
+    "name": "Quiz App",
+    "description": "Quiz App with Face Authentication (React Native Assignment #2)",
+    "slug": "quizapp-2f61a4de-642a-483e-8341-5973b9d1baaf",
     "privacy": "unlisted",
     "sdkVersion": "35.0.0",
     "version": "1.0.0",
     "orientation": "portrait",
     "primaryColor": "#cccccc",
-    "icon": "https://d1wp6m56sqw74a.cloudfront.net/~assets/c9aa1be8a6a6fe81e20c3ac4106a2ebc",
+    "icon": "./assets/icons/iconfinder_Quiz-Games_190314.png",
     "loading": {
-      "icon": "https://d1wp6m56sqw74a.cloudfront.net/~assets/c9aa1be8a6a6fe81e20c3ac4106a2ebc",
+      "icon": "./assets/icons/iconfinder_Quiz-Games_190314.png",
       "hideExponentText": false
     },
+    "android": {
+      "package": "com.QuizApp.adnanapp",
+      "versionCode": 1,
+      "icon": "./assets/icons/iconfinder_Quiz-Games_190314.png"
+    },
+    "assetBundlePatterns": [
+      "**/*",
+      "assets/*",
+      "assets/fonts/*"
+    ],
     "packagerOpts": {
       "assetExts": [
         "ttf",
@@ -23,6 +33,11 @@
     },
     "ios": {
       "supportsTablet": true
+    },
+    "updates": {
+      "enabled": false,
+      "checkAutomatically": "ON_ERROR_RECOVERY",
+      "fallbackToCacheTimeout": 30000
     }
   }
 }
