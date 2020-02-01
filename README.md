@@ -1,4 +1,4 @@
-# Quiz App with Face Authentication
+# Quiz App with Face Authentication (R.N Assignment #2)
 
 Your Can Check your Knowledge with that app. Easy to Use, First Your Face Authenticated and then start quiz...
 
@@ -7,3 +7,5 @@ Technologies i used:
 * React Native
 * React Native Paper 
 * Quiz Api for Quiz
+
+Date: 08-July-2019
