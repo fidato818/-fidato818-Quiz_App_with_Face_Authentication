@@ -18,6 +18,7 @@ import SplashScreen from '../screens/Splash/index';
 import HomeScreen from '../screens/Home/index';
 import FaceScanScreen from '../screens/FaceScan/index';
 import QuestionsScreen from '../screens/Questions/index';
+import ResultScreen from '../screens/Result/index';
 import {
   IconButton,
   Colors,
@@ -62,6 +63,12 @@ const DashboardNavigator = createStackNavigator(
     },
     Quiz: {
       screen: QuestionsScreen,
+      navigationOptions: {
+        header: null,
+      },
+    },
+    Result: {
+      screen: ResultScreen,
       navigationOptions: {
         header: null,
       },
@@ -137,7 +144,6 @@ const DashboardStackNavigator = createStackNavigator(
 
 const AppSwitchNavigator = createSwitchNavigator({
   Welcome: { screen: SplashScreen },
-
   // Dashboard: { screen: AppDrawerNavigator },
   Dashboard: { screen: DashboardStackNavigator },
 });

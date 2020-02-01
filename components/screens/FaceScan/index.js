@@ -9,22 +9,12 @@ import {
   Dimensions,
 } from 'react-native';
 import * as Permissions from 'expo-permissions';
-import { Camera } from 'expo-camera';
 import * as FaceDetector from 'expo-face-detector';
 import * as ImagePicker from 'expo-image-picker';
 import {
-  Button,
-  Modal,
-  Provider as PaperProvider,
-  FAB,
-  Card,
-  Portal,
-  IconButton,
-  Colors,
-  Paragraph,
-  Title,
-  Snackbar,
-  Avatar,
+  Button,  
+  Provider as PaperProvider,  
+  Snackbar, 
   ActivityIndicator,
 } from 'react-native-paper';
 import ProgressBar from 'react-native-progress/Bar';
@@ -120,7 +110,6 @@ export default class FaceScan extends React.Component {
             image: pickerResult.uri,
             visibleSnackbar: true,
             showIndicator: false,
-            // toggle: !this.state.toggle,
           });
         } else if (detect.faces.length === 0) {
           Alert.alert(
@@ -131,7 +120,8 @@ export default class FaceScan extends React.Component {
                 text: 'OK',
                 onPress: () =>
                   this.setState({
-                    toggle: !this.state.toggle,
+                    showIndicator: false,
+                    image: '',
                   }),
               },
             ],
@@ -143,6 +133,7 @@ export default class FaceScan extends React.Component {
         }
       } catch (e) {
         console.log(e);
+        // Alert.alert('Quiz App', `${e}`);
       }
       if (pickerResult.cancelled) {
         this.setState({
@@ -155,7 +146,7 @@ export default class FaceScan extends React.Component {
       //     image: pickerResult.uri,
 
       //     showIndicator: false,
-      //   }); 
+      //   });
       // }
 
       this.uploadImageAsync(pickerResult.uri);
@@ -176,12 +167,8 @@ export default class FaceScan extends React.Component {
   render() {
     let {
       image,
-      hasCameraPermission,
-      scanned,
-      visibleSnackbar,
-      imagedummy,
+      hasCameraPermission,      
     } = this.state;
-
     console.log('image', image);
 
     if (hasCameraPermission === null) {

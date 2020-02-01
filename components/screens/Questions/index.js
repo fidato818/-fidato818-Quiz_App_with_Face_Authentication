@@ -1,6 +1,15 @@
 import React, { Component } from 'react';
 import CountDown from 'react-native-countdown-component';
-import { Constants, Text, View, StyleSheet, Image, Alert } from 'react-native';
+import {
+  Constants,
+  Text,
+  View,
+  StyleSheet,
+  Image,
+  Alert,
+  BackHandler,
+  TouchableOpacity,
+} from 'react-native';
 import {
   RadioButton,
   Button,
@@ -12,7 +21,8 @@ import {
   Divider,
   ActivityIndicator,
 } from 'react-native-paper';
-const timer = () => { };
+
+const timer = () => {};
 export default class Quest extends Component {
   constructor(props, context) {
     super(props, context);
@@ -26,6 +36,7 @@ export default class Quest extends Component {
       photo: this.props.navigation.state.params.imageUri,
       showIndicator: false,
     };
+    this.handleLogout = this.handleLogout.bind(this);
   }
 
   async componentDidMount() {
@@ -37,10 +48,35 @@ export default class Quest extends Component {
         return this.setState({ questions: resp.results });
       });
     this.countdownTimer();
+    this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+      Alert.alert(
+        'Quiz App',
+        'Are you sure want to Quit Quiz?',
+        [
+          { text: 'Cancel', onPress: () => {}, style: 'cancel' },
+          { text: 'Quit', onPress: () => this.handleLogout() },
+        ],
+        { cancelable: false }
+      );
+      return true;
+    });
+  }
+
+  componentWillUnmount() {
+    this.backHandler.remove();
+  }
+
+  handleLogout() {
+    const { answerCorrect } = this.state;
+    global.screenName = 'Dashboard';
+    return this.props.navigation.navigate('Result', {
+      answer: answerCorrect,
+    });
   }
 
   countdownTimer() {
     this.setState({ remainingTime: 60 * 5 + 30 });
+
     clearInterval(timer);
     var timer = setInterval(() => {
       if (!this.state.remainingTime) {
@@ -71,14 +107,12 @@ export default class Quest extends Component {
         currentQuesIndex: incrementCurrentQuestionIndex,
         answerCorrect: rightAnswer,
         value: '',
-        remainingTime: 10,
       });
     } else {
       let incrementCurrentQuestionIndex = this.state.currentQuesIndex + 1;
       this.setState({
         currentQuesIndex: incrementCurrentQuestionIndex,
         value: '',
-        remainingTime: 10,
       });
     }
   }
@@ -87,13 +121,17 @@ export default class Quest extends Component {
     const {
       questions,
       currentQuesIndex,
-
+      answers,
+      answerShow,
+      correct,
+      incorrect,
       value,
-
+      resultValue,
       answerCorrect,
-
+      rewardTitle,
       photo,
       remainingTime,
+      editing,
     } = this.state;
 
     if (!questions.length) {
@@ -102,14 +140,23 @@ export default class Quest extends Component {
 
     if (currentQuesIndex >= questions.length || remainingTime === 0) {
       return (
-        <View style={styles.container}>
-          <Card style={{ justifyContent: 'center' }}>
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            backgroundColor: '#78909C',
+          }}>
+          <Card style={styles.endquizContainer} elevation={2}>
             <Card.Content>
               <Text style={{ textAlign: 'center', fontSize: 20 }}>
                 End of the Quiz!
               </Text>
               <Text
-                style={{ textAlign: 'center', fontSize: 20, marginBottom: 30 }}>
+                style={{
+                  textAlign: 'center',
+                  fontSize: 20,
+                  marginBottom: 30,
+                }}>
                 Your Score is: {answerCorrect}
               </Text>
               {answerCorrect >= 80 && answerCorrect <= 100 ? (
@@ -143,18 +190,18 @@ export default class Quest extends Component {
                   You Are Failed!
                 </Text>
               ) : (
-                      answerCorrect == 0 && (
-                        <Text
-                          style={{
-                            textAlign: 'center',
-                            fontSize: 20,
-                            marginBottom: 30,
-                            color: 'red',
-                          }}>
-                          You Are Failed!
+                answerCorrect == 0 && (
+                  <Text
+                    style={{
+                      textAlign: 'center',
+                      fontSize: 20,
+                      marginBottom: 30,
+                      color: 'red',
+                    }}>
+                    You Are Failed!
                   </Text>
-                      )
-                    )}
+                )
+              )}
               <Button
                 mode="contained"
                 color="#3498db"
@@ -173,8 +220,13 @@ export default class Quest extends Component {
 
     return (
       <PaperProvider>
-        {!this.state.questions.length === 0 ? (
-          <View>
+        {questions[currentQuesIndex] ? (
+          <View
+            style={{
+              backgroundColor: '#78909C',
+              flex: 1,
+              justifyContent: 'center',
+            }}>
             {photo ? (
               <View style={styles.container}>
                 <Card style={{ justifyContent: 'flex-start' }}>
@@ -267,36 +319,36 @@ export default class Quest extends Component {
                         Next
                       </Button>
                     ) : (
-                        <Button
-                          disabled
-                          color="#3498db"
-                          onPress={() => this.handleNext(value)}>
-                          Next
+                      <Button
+                        disabled
+                        color="#3498db"
+                        onPress={() => this.handleNext(value)}>
+                        Next
                       </Button>
-                      )}
+                    )}
                   </Card.Actions>
                 </Card>
               </View>
             ) : (
-                <View style={styles.noaccess}>
-                  <Text style={{ fontSize: 20, color: 'red' }}>
-                    You didn't access any Quiz!
+              <View style={styles.noaccess}>
+                <Text style={{ fontSize: 20, color: 'red' }}>
+                  You didn't access any Quiz!
                 </Text>
-                  <Button
-                    mode="contained"
-                    disabled={false}
-                    color="#3498db"
-                    onPress={() => this.props.navigation.navigate('Scan Face')}>
-                    <Text style={{ color: 'white' }}>Back</Text>
-                  </Button>
-                </View>
-              )}
+                <Button
+                  mode="contained"
+                  disabled={false}
+                  color="#3498db"
+                  onPress={() => this.props.navigation.navigate('Scan Face')}>
+                  <Text style={{ color: 'white' }}>Back</Text>
+                </Button>
+              </View>
+            )}
           </View>
         ) : (
-            <View style={styles.loading}>
-              <ActivityIndicator size="large" color="#0000ff" />
-            </View>
-          )}
+          <View style={styles.loading}>
+            <ActivityIndicator size="large" color="#0000ff" />
+          </View>
+        )}
       </PaperProvider>
     );
   }
@@ -304,11 +356,17 @@ export default class Quest extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    // flex: 1,
     // justifyContent: 'center',
     // paddingTop: Constants.statusBarHeight,
-    backgroundColor: '#ecf0f1',
+    backgroundColor: '#78909C',
     padding: 8,
+  },
+  endquizContainer: {
+    backgroundColor: '#ecf0f1',
+    justifyContent: 'center',
+    padding: 8,
+    margin: 10,
   },
   noaccess: {
     flex: 1,
@@ -319,6 +377,7 @@ const styles = StyleSheet.create({
   },
   loading: {
     position: 'absolute',
+    backgroundColor: '#78909C',
     left: 0,
     right: 0,
     top: 0,

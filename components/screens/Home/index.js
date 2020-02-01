@@ -2,27 +2,15 @@ import * as React from 'react';
 import {
   View,
   StyleSheet,
-  Alert,
-  Image,
-  ScrollView,
-  KeyboardAvoidingView,
-  AsyncStorage, Animated, Easing
+  
 } from 'react-native';
 import Constants from 'expo-constants';
+
 import {
   Card,
-  Button,
-  FAB,
-  Portal,
-  Modal,
-  Text,
-  Provider,
-  Surface,
-  HelperText,
-  Paragraph,
-  Dialog,
-  TextInput,
-  Avatar,
+  Button, 
+  Text,  
+  Paragraph, 
   Title,
 } from 'react-native-paper';
 

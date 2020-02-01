@@ -1,16 +1,17 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, Image, ImageBackground } from 'react-native';
-
+import * as Font from 'expo-font';
 
 export default class Splash extends Component {
   constructor(props) {
     super(props);
 
     setTimeout(() => {
-      props.navigation.navigate('Dashboard');
+      props.navigation.navigate('Dashboard');     
     }, 3000);
+    
   }
-  render() {
+  render() {  
     return (
       <ImageBackground
         source={require('../../../assets/images/kobu-agency-ipARHaxETRk-unsplash.jpg')}
@@ -53,15 +54,14 @@ const styles = StyleSheet.create({
   bottomView: {
     width: '100%',
     height: 50,
-
     justifyContent: 'center',
     alignItems: 'center',
     position: 'absolute',
     bottom: 0,
   },
   textStyle: {
-    fontFamily: 'ubuntu-regular',
+   
     fontSize: 20,
-    color: 'white',
+    color: 'black',
   },
 });
