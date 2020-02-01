@@ -1,0 +1,21 @@
+Due Jul 14, 2019, 5:00 PM
+React Native Assignment 2
+
+
+Develop a simple quiz application on React Native
+Build a single-page trivia quiz app
+● The app should start the camera and user will capture the photo. If the camera detects the face, it should show the button to start the quiz otherwise show the error, no face found!
+Checkout face detection in expo docs.
+● The app should pull 10 questions from the Open Trivia Database API (Search for Trivia Quiz Api)
+● It should display a “Start Quiz” button to the user.
+● When the user clicks this button, it should display the questions, and allow the user to
+answer them.
+● When the user has answered all the questions, the application should show the user a
+total score. It should also show the amount of time taken to answer the questions.
+● There should be a “Play again” button that allows the user to play the quiz again.
+● Add a README file to your source code that describes how to get the source code,
+install dependencies, and run the app on mobile device.
+
+● Push the source code to a public repository on GitHub, Gitlab or Bitbucket., and send the
+link to the repository to the reviewer
+● Create Video & upload it
